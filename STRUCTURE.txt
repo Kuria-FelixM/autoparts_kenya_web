@@ -1,0 +1,235 @@
+AutoParts Kenya Frontend - Next.js 15 Project Structure
+=========================================================
+
+autoparts_kenya_web/
+├── .env.local                          # Local environment variables
+├── .env.example                        # Environment template
+├── .gitignore
+├── next.config.mjs                     # Next.js configuration
+├── tsconfig.json                       # TypeScript strict config
+├── tailwind.config.ts                  # Tailwind theme (colors, fonts, animations)
+├── postcss.config.js                   # PostCSS for Tailwind
+├── package.json                        # Dependencies
+├── public/                             # Static assets
+│   ├── manifest.json                   # PWA manifest
+│   ├── favicon.ico
+│   ├── logo.svg
+│   ├── logo-192.png                    # PWA icons
+│   ├── logo-512.png
+│   └── images/
+│       ├── splash.jpg                  # Onboarding splash
+│       └── ...
+│
+├── 📁 src/
+│   ├── 📁 app/                         # Next.js App Router
+│   │   ├── layout.tsx                  # Root layout (TopAppBar, BottomNav, mobile-responsive)
+│   │   ├── globals.css                 # Global styles (colors, typography, animations)
+│   │   ├── page.tsx                    # Home page (/index)
+│   │   │
+│   │   ├── 📁 (auth)/                  # Auth group (login, register, splash)
+│   │   │   ├── splash/                 # /splash
+│   │   │   │   └── page.tsx
+│   │   │   ├── login/
+│   │   │   │   └── page.tsx
+│   │   │   ├── register/
+│   │   │   │   └── page.tsx
+│   │   │   └── layout.tsx              # Auth layout (no bottom nav)
+│   │   │
+│   │   ├── 📁 search/                  # /search (advanced filter page)
+│   │   │   ├── page.tsx
+│   │   │   └── layout.tsx
+│   │   │
+│   │   ├── 📁 product/                 # /product/[id]
+│   │   │   ├── [id]/
+│   │   │   │   └── page.tsx            # Product detail page
+│   │   │   └── layout.tsx
+│   │   │
+│   │   ├── 📁 cart/                    # /cart
+│   │   │   ├── page.tsx                # Cart summary (triggers checkout modal)
+│   │   │   └── layout.tsx
+│   │   │
+│   │   ├── 📁 checkout/                # /checkout (guest/login flow)
+│   │   │   ├── page.tsx                # Checkout page (modal or card)
+│   │   │   └── layout.tsx
+│   │   │
+│   │   ├── 📁 profile/                 # User profile (protected)
+│   │   │   ├── page.tsx                # /profile (tabs: orders, favorites, saved vehicles)
+│   │   │   ├── orders/
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── [id]/
+│   │   │   │       └── page.tsx        # Order detail
+│   │   │   └── layout.tsx
+│   │   │
+│   │   ├── 📁 admin/                   # Owner-only admin panel
+│   │   │   ├── layout.tsx              # Admin layout (sidebar nav)
+│   │   │   ├── dashboard/
+│   │   │   │   └── page.tsx            # /admin/dashboard (metrics, analytics)
+│   │   │   ├── products/
+│   │   │   │   ├── page.tsx            # Products list
+│   │   │   │   ├── [id]/
+│   │   │   │   │   └── edit/
+│   │   │   │   │       └── page.tsx    # Edit product
+│   │   │   │   └── new/
+│   │   │   │       └── page.tsx        # Add product stepper form
+│   │   │   ├── inventory/
+│   │   │   │   └── page.tsx            # Stock management
+│   │   │   ├── orders/
+│   │   │   │   ├── page.tsx            # All orders (filters)
+│   │   │   │   └── [id]/
+│   │   │   │       └── page.tsx        # Order detail (update status)
+│   │   │   ├── vehicles/
+│   │   │   │   ├── page.tsx            # VehicleMake/Model management
+│   │   │   │   └── [id]/
+│   │   │   │       └── page.tsx
+│   │   │   └── analytics/
+│   │   │       └── page.tsx            # Revenue, profit, top products
+│   │   │
+│   │   ├── 📁 api/                     # API routes (if needed for edge functions)
+│   │   │   └── auth/
+│   │   │       ├── callback/
+│   │   │       │   └── route.ts        # OAuth callback (if needed)
+│   │   │       └── logout/
+│   │   │           └── route.ts
+│   │   │
+│   │   └── 📁 [notFound]/
+│   │       └── page.tsx                # Catch-all 404
+│   │
+│   ├── 📁 components/                  # Reusable React components
+│   │   ├── layout/
+│   │   │   ├── TopAppBar.tsx           # Header with logo, search, user menu
+│   │   │   ├── BottomNav.tsx           # Mobile bottom navigation (home, search, cart, profile)
+│   │   │   ├── SideDrawer.tsx          # Desktop collapse drawer (owner admin links)
+│   │   │   └── MobileMenu.tsx          # Mobile hamburger menu
+│   │   │
+│   │   ├── common/
+│   │   │   ├── Button.tsx              # CTA, ghost, secondary variants
+│   │   │   ├── Badge.tsx               # Status badges (Genuine Parts, Secure, Delivery time)
+│   │   │   ├── Card.tsx                # Product/order card wrapper
+│   │   │   ├── LoadingSpinner.tsx      # Wheel-spin loader
+│   │   │   ├── SkeletonLoader.tsx      # Product grid skeleton
+│   │   │   ├── Empty StateComp.tsx     # "No results", "Cart empty" friendly messages
+│   │   │   ├── Toast.tsx               # sonner/react-hot-toast wrapper
+│   │   │   ├── Modal.tsx               # Base modal (auth, are-you-sure, checkout)
+│   │   │   └── Drawer.tsx              # Mobile drawer wrapper
+│   │   │
+│   │   ├── home/
+│   │   │   ├── HeroSection.tsx         # Large image + CTA (Nairobi-themed)
+│   │   │   ├── VehicleSelector.tsx     # Chip/dropdown selector (make/model/year)
+│   │   │   ├── PopularSection.tsx      # Grid of featured/recent products
+│   │   │   ├── PromoSlider.tsx         # Carousel for promotions/banners
+│   │   │   └── CategoriesGrid.tsx      # Quick category access
+│   │   │
+│   │   ├── product/
+│   │   │   ├── ProductCard.tsx         # Grid card (image, name, price, rating, badge)
+│   │   │   ├── ProductGallery.tsx      # Sticky image scroller + thumbnails
+│   │   │   ├── CompatibilityTable.tsx  # Vehicle models table (scrollable on mobile)
+│   │   │   ├── PriceSection.tsx        # Price, discount %, stock status
+│   │   │   ├── ReviewsSummary.tsx      # Rating, review count
+│   │   │   ├── RelatedCarousel.tsx     # Featured carousel (framer-motion)
+│   │   │   ├── AddToCartBtn.tsx        # Main CTA (snap animation)
+│   │   │   └── FavButton.tsx           # Heart icon toggle
+│   │   │
+│   │   ├── search/
+│   │   │   ├── SearchInput.tsx         # Text search + voice (icon)
+│   │   │   ├── FilterAccordion.tsx     # Vehicle/price/category filters (collapse)
+│   │   │   ├── ProductsGrid.tsx        # Infinite scroll results
+│   │   │   └── FilterChips.tsx         # Active filters display + clear all
+│   │   │
+│   │   ├── cart/
+│   │   │   ├── CartItem.tsx            # Line item (qty selector, remove)
+│   │   │   ├── CartSummary.tsx         # Subtotal, delivery, total (KSh formatting)
+│   │   │   ├── DeliverySelector.tsx    # Standard/Express (radio + icon) + est. date
+│   │   │   └── PromoCode.tsx           # Coupon input (optional)
+│   │   │
+│   │   ├── checkout/
+│   │   │   ├── GuestModal.tsx          # "Continue as Guest" + "Log In / Register" buttons
+│   │   │   ├── GuestForm.tsx           # Email, phone, delivery address (for guest)
+│   │   │   ├── LoginForm.tsx           # Username/email, password
+│   │   │   ├── RegisterForm.tsx        # SignUp stepper (phone, password, vehicle)
+│   │   │   ├── DeliveryForm.tsx        # Address, recipient, delivery type
+│   │   │   ├── MpesaPayment.tsx        # Phone input (formatted), "Enter M-Pesa PIN" instructions
+│   │   │   ├── PaymentSuccess.tsx      # Confetti, order # , "Track Order" button
+│   │   │   └── OrderSummary.tsx        # Cart table (checkout review)
+│   │   │
+│   │   ├── profile/
+│   │   │   ├── ProfileHeader.tsx       # Avatar, name, phone, business badge
+│   │   │   ├── OrdersTab.tsx           # Active/past orders list
+│   │   │   ├── OrderCard.tsx           # Order summary (# , date, total, status badge)
+│   │   │   ├── FavoritesTab.tsx        # Saved products grid
+│   │   │   ├── SavedVehiclesTab.tsx    # Saved vehicle list + edit/delete
+│   │   │   └── AccountSettings.tsx     # Email, password change (if owner: tax id, business)
+│   │   │
+│   │   ├── admin/
+│   │   │   ├── AdminSidebar.tsx        # Owner-only nav (dashboard, products, orders, etc.)
+│   │   │   ├── AdminLayout.tsx         # Admin page wrapper
+│   │   │   ├── DashboardCharts.tsx     # Revenue, order count, top products (recharts/nivo)
+│   │   │   ├── ProductForm.tsx         # Stepper: Basic → Pricing → Vehicles → Images
+│   │   │   ├── ProductTable.tsx        # Products list (with inline edit/delete)
+│   │   │   ├── InventoryTable.tsx      # Stock, low-stock alerts, bulk update
+│   │   │   ├── OrdersAdmin.tsx         # All orders (filters, status update)
+│   │   │   └── AnalyticsCards.tsx      # Metric cards (total revenue, AOV, profit)
+│   │   │
+│   │   └── icons/
+│   │       ├── WrenchIcon.tsx          # Custom wrench
+│   │       ├── TyreIcon.tsx            # Custom tyre
+│   │       ├── BatteryIcon.tsx         # Custom battery
+│   │       └── OilCanIcon.tsx          # Custom oil can
+│   │
+│   ├── 📁 lib/                         # Utilities & helpers
+│   │   ├── api.ts                      # Axios instance (JWT interceptor, base URL)
+│   │   ├── api-client.ts               # Typed API functions (getProducts, checkout, etc.)
+│   │   ├── auth.ts                     # JWT, login, register, logout helpers
+│   │   ├── validation.ts               # Phone, email, form validation (Kenyan phone format)
+│   │   ├── formatting.ts               # Currency (KSh), dates, phone display
+│   │   ├── storage.ts                  # localStorage helpers (cart, favorites, user)
+│   │   ├── constants.ts                # API endpoints, colors, text (Swahili/English)
+│   │   └── hooks.ts                    # Custom hooks (useAuth, useCart, useInfiniteScroll)
+│   │
+│   ├── 📁 stores/                      # Zustand state management
+│   │   ├── cartStore.ts                # Cart state (items, total, guest mode)
+│   │   ├── favoritesStore.ts           # Favorited products
+│   │   ├── authStore.ts                # User, JWT, loading, login/logout
+│   │   ├── appStore.ts                 # Global UI (mobile menu open, notifications)
+│   │   └── vehicleStore.ts             # Selected vehicle (make/model/year)
+│   │
+│   ├── 📁 types/                       # TypeScript interfaces
+│   │   ├── api.ts                      # API response/request types
+│   │   ├── models.ts                   # Product, Order, User, Vehicle types
+│   │   └── common.ts                   # Enums, constants
+│   │
+│   ├── 📁 styles/                      # Global/component styles (if needed)
+│   │   └── animations.css              # Keyframes for custom animations
+│   │
+│   └── 📁 middleware/                  # Next.js middleware
+│       └── auth.ts                     # Protected route redirects
+│
+├── 📁 public/
+│   ├── robots.txt
+│   ├── sitemap.xml
+│   └── sw.js                           # Service worker (offline support)
+│
+└── 📁 tests/                           # Optional: Jest/Vitest tests
+    ├── unit/
+    ├── integration/
+    └── e2e/
+
+
+KEY DIRECTORIES EXPLAINED:
+=========================
+✅ /app                - Next.js 15 App Router (file-based routing)
+✅ /components         - Reusable React components (organized by feature)
+✅ /lib                - Utilities, API calls, helpers, hooks
+✅ /stores             - Zustand state management (with persist)
+✅ /types              - TypeScript interfaces & types
+✅ /public             - Static assets, PWA manifest, service worker
+
+
+TOTAL STRUCTURE:
+- 50+ components (organized by feature)
+- 7 main pages (home, search, product detail, cart, checkout, profile, admin)
+- 4 Zustand stores (cart, favorites, auth, vehicle selection)
+- Utility hooks & helpers
+- TypeScript strict mode
+- Tailwind CSS with custom color/font config
+- Service worker for offline support
+- PWA manifest for mobile installability

@@ -1,0 +1,383 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Variables for theming */
+:root {
+  --color-reliable-red: #D32F2F;
+  --color-mechanic-blue: #1976D2;
+  --color-trust-gold: #FBC02D;
+  --color-success-green: #388E3C;
+  --color-road-grey-900: #424242;
+  --color-road-grey-700: #616161;
+  --color-road-grey-500: #757575;
+  --color-road-grey-300: #E0E0E0;
+  --color-road-grey-100: #FAFAFA;
+  --color-warning-orange: #F57C00;
+  --color-info-cyan: #0097A7;
+
+  /* Timing functions */
+  --transition-fast: 0.15s;
+  --transition-base: 0.3s;
+  --transition-slow: 0.5s;
+}
+
+/* Base Styles */
+* {
+  @apply antialiased;
+}
+
+html,
+body {
+  @apply bg-road-grey-100 text-road-grey-900;
+  font-family: 'Open Sans', sans-serif;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Typography */
+h1 {
+  @apply text-h1 font-montserrat text-road-grey-900 font-bold;
+}
+
+h2 {
+  @apply text-h2 font-montserrat text-road-grey-900 font-bold;
+}
+
+h3 {
+  @apply text-h3 font-montserrat text-road-grey-900 font-bold;
+}
+
+h4 {
+  @apply text-h4 font-montserrat text-road-grey-900 font-bold;
+}
+
+p {
+  @apply text-body-md text-road-grey-700;
+}
+
+a {
+  @apply text-mechanic-blue underline hover:opacity-80 transition-opacity;
+}
+
+button {
+  @apply focus:outline-none focus:ring-2 focus:ring-mechanic-blue focus:ring-offset-2 transition-all;
+}
+
+/* Input styling */
+input,
+textarea,
+select {
+  @apply w-full px-3 py-2 border border-road-grey-300 rounded-md bg-white text-road-grey-900 placeholder-road-grey-500;
+  @apply focus:outline-none focus:ring-2 focus:ring-mechanic-blue focus:border-mechanic-blue;
+  @apply transition-colors duration-200;
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+  @apply bg-road-grey-100 cursor-not-allowed opacity-60;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-road-grey-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-road-grey-300 rounded-md hover:bg-road-grey-500;
+}
+
+/* Container queries */
+@supports (container-type: inline-size) {
+  @container (min-width: 300px) {
+    .cq-sm {
+      @apply block;
+    }
+  }
+
+  @container (min-width: 600px) {
+    .cq-md {
+      @apply block;
+    }
+  }
+}
+
+/* Utility Classes */
+.truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Safe area support for notched devices */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+
+  .safe-area-top {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+
+  .safe-area-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Loading & Spinner Animations */
+.spinner-wheel {
+  @apply animate-spin-wheel w-12 h-12 border-4 border-road-grey-300 border-t-mechanic-blue rounded-full;
+}
+
+.skeleton {
+  @apply animate-pulse bg-road-grey-300 rounded-md;
+}
+
+.skeleton-product {
+  @apply w-full h-56 skeleton rounded-lg;
+}
+
+/* Card & Container Styles */
+.card {
+  @apply bg-white rounded-lg shadow-md overflow-hidden transition-shadow hover:shadow-lg;
+}
+
+.card-elevated {
+  @apply bg-white rounded-lg shadow-lg;
+}
+
+.container-app {
+  @apply max-w-app mx-auto w-full px-4 md:px-0;
+}
+
+/* Button Reset */
+.btn-reset {
+  @apply bg-none border-none p-0 cursor-pointer text-inherit;
+}
+
+/* Badges & Tags */
+.badge-base {
+  @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-badge font-montserrat font-semibold;
+}
+
+.badge-genuine {
+  @apply badge-base bg-trust-gold/20 text-yellow-800;
+}
+
+.badge-success {
+  @apply badge-base bg-success-green/20 text-success-green;
+}
+
+.badge-warning {
+  @apply badge-base bg-warning-orange/20 text-warning-orange;
+}
+
+.badge-info {
+  @apply badge-base bg-info-cyan/20 text-info-cyan;
+}
+
+.badge-delivery {
+  @apply badge-base bg-mechanic-blue/20 text-mechanic-blue;
+}
+
+/* CTA Button Styles */
+.btn-primary {
+  @apply bg-reliable-red hover:bg-red-700 text-white font-montserrat font-semibold py-3 px-4 rounded-lg transition-colors w-full md:w-auto min-h-touch tap-highlight-transparent;
+}
+
+.btn-primary:active {
+  @apply scale-95;
+}
+
+.btn-secondary {
+  @apply bg-white border-2 border-mechanic-blue text-mechanic-blue font-montserrat font-semibold py-3 px-4 rounded-lg hover:bg-mechanic-blue/10 transition-colors w-full md:w-auto min-h-touch;
+}
+
+.btn-ghost {
+  @apply bg-transparent text-mechanic-blue hover:bg-mechanic-blue/10 font-montserrat py-2 px-3 rounded-md transition-colors min-h-touch;
+}
+
+.btn-disabled {
+  @apply opacity-60 cursor-not-allowed;
+}
+
+/* Form Groups */
+.form-group {
+  @apply flex flex-col gap-2 mb-4;
+}
+
+.form-label {
+  @apply text-body-md font-montserrat font-semibold text-road-grey-900;
+}
+
+.form-hint {
+  @apply text-body-sm text-road-grey-500;
+}
+
+.form-error {
+  @apply text-body-sm text-reliable-red;
+}
+
+/* Layout Utilities */
+.flex-center {
+  @apply flex items-center justify-center;
+}
+
+.flex-between {
+  @apply flex items-center justify-between;
+}
+
+.grid-responsive {
+  @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4;
+}
+
+/* Gradient Overlays */
+.gradient-fade-top {
+  background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%);
+}
+
+.gradient-fade-bottom {
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%);
+}
+
+/* Touch Target Utilities */
+.touch-target {
+  @apply min-w-12 min-h-12 flex-center;
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+  .hide-mobile {
+    @apply hidden;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    @apply hidden;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    @apply animate-none transition-none !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  /* Optional dark mode support */
+  html {
+    color-scheme: light;
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    @apply bg-white;
+  }
+
+  .no-print {
+    @apply hidden;
+  }
+}
+
+/* Custom Animations - Keyframes */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    to right,
+    #f6f7f8 8%,
+    #edeef1 18%,
+    #f6f7f8 33%
+  );
+  background-size: 800px 104px;
+}
+
+/* Confetti animation (for order success) */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100vh) rotateZ(0deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(100vh) rotateZ(720deg);
+    opacity: 0;
+  }
+}
+
+.confetti {
+  animation: confetti-fall 3s ease-out;
+}
+
+/* Tap highlight for iOS */
+.tap-highlight-transparent {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Webkit appearance reset */
+input,
+select,
+textarea,
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+/* Focus visible for accessibility */
+*:focus-visible {
+  @apply outline-2 outline-offset-2 outline-mechanic-blue;
+}
+
+/* Placeholder styling */
+::placeholder {
+  @apply text-road-grey-500 opacity-100;
+}
+
+/* Selection color */
+::selection {
+  @apply bg-mechanic-blue text-white;
+}
+
+::-moz-selection {
+  @apply bg-mechanic-blue text-white;
+}
