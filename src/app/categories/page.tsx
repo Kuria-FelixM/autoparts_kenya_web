@@ -11,7 +11,7 @@ import {
   Gauge,
   Shield,
   Lightbulb,
-  Solenoid,
+  Package,
   Wind,
 } from 'lucide-react';
 import { apiMethods, handleApiError } from '@/lib/api';
@@ -29,7 +29,7 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   Batteries: <Zap className="h-8 w-8" />,
   'Oils & Fluids': <Droplet className="h-8 w-8" />,
   Electronics: <Lightbulb className="h-8 w-8" />,
-  Accessories: <Solenoid className="h-8 w-8" />,
+  Accessories: <Package className="h-8 w-8" />,
 };
 
 export default function CategoriesPage() {

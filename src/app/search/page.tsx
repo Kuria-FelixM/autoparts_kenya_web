@@ -10,7 +10,7 @@ import ProductCard from '@/components/product/ProductCard';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import EmptyState from '@/components/common/EmptyState';
 import { apiMethods, handleApiError } from '@/lib/api';
-import { CONSTANTS } from '@/lib/constants';
+import { PAGINATION } from '@/lib/constants';
 import { toast } from 'react-hot-toast';
 import { Product as ProductType } from '@/types/models';
 
@@ -96,7 +96,7 @@ export default function SearchPage() {
       try {
         const params = {
           page: pageNum,
-          page_size: CONSTANTS.DEFAULT_PAGE_SIZE,
+          page_size: PAGINATION.DEFAULT_PAGE_SIZE,
           search: filters.search,
           categories: filters.categories.length > 0 ? filters.categories.join(',') : undefined,
           min_price: filters.priceRange[0],

@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { BarChart3, ShoppingCart, Package, TrendingUp, LogOut, Menu } from 'lucide-react';
+import { BarChart3, ShoppingCart, Package, TrendingUp, LogOut } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import Button from '@/components/common/Button';
 import Card from '@/components/common/Card';
@@ -20,7 +20,7 @@ export default function AdminDashboard() {
       return;
     }
 
-    if (!user?.is_owner) {
+    if (!user?.profile?.is_owner) {
       router.push('/');
       return;
     }
@@ -32,7 +32,7 @@ export default function AdminDashboard() {
     return <LoadingSpinner fullScreen message="Loading admin dashboard..." />;
   }
 
-  if (!user?.is_owner) {
+  if (!user?.profile?.is_owner) {
     return (
       <div className="min-h-screen bg-road-grey-100 p-4 flex items-center justify-center">
         <Card className="p-8 text-center max-w-md">

@@ -93,14 +93,16 @@ export default function RegisterPage() {
         email: formData.email,
         phone_number: normalizePhoneNumber(formData.phone),
         password: formData.password,
+        password_confirm: formData.password,
       };
 
       const response = await apiMethods.register(registrationData);
 
-      setUser(response.user);
+      const data = (response as any)?.data || response;
+      setUser(data.user);
       setTokens({
-        access: response.access,
-        refresh: response.refresh,
+        access: data.access,
+        refresh: data.refresh,
       });
 
       toast.success('Account created successfully!');

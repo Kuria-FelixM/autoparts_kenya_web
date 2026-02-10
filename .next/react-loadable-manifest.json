@@ -1,0 +1,23 @@
+{
+  "app/layout.tsx -> @/components/layout/BottomNav": {
+    "id": "app/layout.tsx -> @/components/layout/BottomNav",
+    "files": [
+      "static/chunks/common-_app-pages-browser_node_modules_lucide-react_dist_esm_createLucideIcon_js-_app-pages-b-59f429.js",
+      "static/chunks/_app-pages-browser_src_components_layout_BottomNav_tsx.js"
+    ]
+  },
+  "app/layout.tsx -> @/components/layout/SideDrawer": {
+    "id": "app/layout.tsx -> @/components/layout/SideDrawer",
+    "files": [
+      "static/chunks/common-_app-pages-browser_node_modules_lucide-react_dist_esm_createLucideIcon_js-_app-pages-b-59f429.js",
+      "static/chunks/_app-pages-browser_src_components_layout_SideDrawer_tsx.js"
+    ]
+  },
+  "app/layout.tsx -> @/components/layout/TopAppBar": {
+    "id": "app/layout.tsx -> @/components/layout/TopAppBar",
+    "files": [
+      "static/chunks/common-_app-pages-browser_node_modules_lucide-react_dist_esm_createLucideIcon_js-_app-pages-b-59f429.js",
+      "static/chunks/_app-pages-browser_src_components_layout_TopAppBar_tsx.js"
+    ]
+  }
+}

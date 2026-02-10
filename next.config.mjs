@@ -3,7 +3,6 @@
 const nextConfig = {
   // React
   reactStrictMode: true,
-  swcMinify: true,
 
   // Compiler optimizations
   compiler: {
@@ -47,12 +46,6 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1',
     NEXT_PUBLIC_APP_NAME: 'AutoParts Kenya',
-  },
-
-  // Internationalization (placeholder for future i18n)
-  i18n: {
-    locales: ['en', 'sw'],
-    defaultLocale: 'en',
   },
 
   // Headers

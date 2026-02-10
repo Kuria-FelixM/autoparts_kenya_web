@@ -22,7 +22,7 @@ export default function AdminProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    if (!isAuthenticated || !user?.is_owner) {
+    if (!isAuthenticated || !user?.profile?.is_owner) {
       router.push('/auth/login');
       return;
     }
@@ -34,7 +34,8 @@ export default function AdminProductsPage() {
     try {
       setIsLoading(true);
       const response = await apiMethods.getProducts({ page_size: 100 });
-      setProducts(response.results);
+      const data = (response as any)?.data?.results || (response as any)?.results || [];
+      setProducts(data);
     } catch (error) {
       handleApiError(error as any);
       toast.error('Failed to load products');
@@ -43,7 +44,7 @@ export default function AdminProductsPage() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (_id: number) => {
     if (!confirm('Are you sure you want to delete this product?')) return;
 
     try {
@@ -129,7 +130,7 @@ export default function AdminProductsPage() {
                       </td>
                       <td className="px-6 py-4 font-mono text-road-grey-700">{product.sku}</td>
                       <td className="px-6 py-4 font-bold text-reliable-red">
-                        {formatKsh(product.unit_price)}
+                        {formatKsh(product.price)}
                       </td>
                       <td className="px-6 py-4">
                         <span className={`inline-block px-3 py-1 rounded-full text-sm font-bold ${

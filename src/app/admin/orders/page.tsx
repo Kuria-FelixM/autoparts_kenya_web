@@ -3,13 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Eye, MoreVertical } from 'lucide-react';
-import Button from '@/components/common/Button';
+import { Eye } from 'lucide-react';
 import Card from '@/components/common/Card';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import EmptyState from '@/components/common/EmptyState';
 import { useAuthStore } from '@/stores/authStore';
-import { apiMethods, handleApiError } from '@/lib/api';
+import { apiMethods } from '@/lib/api';
 import { formatKsh, formatDate } from '@/lib/formatting';
 import { toast } from 'react-hot-toast';
 import { Order } from '@/types/models';
@@ -31,7 +30,7 @@ export default function AdminOrdersPage() {
   const [filterStatus, setFilterStatus] = useState<string>('all');
 
   useEffect(() => {
-    if (!isAuthenticated || !user?.is_owner) {
+    if (!isAuthenticated || !user?.profile?.is_owner) {
       router.push('/auth/login');
       return;
     }
@@ -42,10 +41,11 @@ export default function AdminOrdersPage() {
   const fetchOrders = async () => {
     try {
       setIsLoading(true);
-      const response = await apiMethods.adminGetOrders
+      const response = apiMethods.adminGetOrders
         ? await apiMethods.adminGetOrders()
         : [];
-      setOrders(Array.isArray(response) ? response : response.results || []);
+      const data = Array.isArray(response) ? response : (response as any)?.data?.results || (response as any)?.results || [];
+      setOrders(data);
     } catch (error) {
       // Fallback: use mock data for demo
       setOrders([
@@ -55,11 +55,17 @@ export default function AdminOrdersPage() {
           guest_phone: '0722123456',
           delivery_address: '123 Main St, Nairobi',
           delivery_city: 'Nairobi',
+          delivery_postal_code: '00100',
+          recipient_name: 'John Doe',
+          recipient_phone: '0722123456',
           subtotal: 15000,
-          delivery_fee: 1500,
-          total: 16500,
+          delivery_cost: 1500,
+          total_amount: 16500,
           order_status: 'pending',
           payment_status: 'paid',
+          customer_email: 'john@example.com',
+          customer_phone: '0722123456',
+          item_count: 0,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           items: [],
@@ -70,7 +76,7 @@ export default function AdminOrdersPage() {
     }
   };
 
-  const handleStatusUpdate = async (orderId: number, newStatus: string) => {
+  const handleStatusUpdate = async (_orderId: number, newStatus: string) => {
     try {
       // API call would go here
       toast.success(`Order status updated to ${newStatus}`);
@@ -151,7 +157,6 @@ export default function AdminOrdersPage() {
                 </thead>
                 <tbody>
                   {filteredOrders.map((order) => {
-                    const statusConfig = ORDER_STATUSES.find((s) => s.value === order.order_status);
                     const itemCount = order.items?.length || 0;
                     return (
                       <tr
@@ -170,7 +175,7 @@ export default function AdminOrdersPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4 font-bold text-reliable-red">
-                          {formatKsh(order.total)}
+                          {formatKsh(order.total_amount)}
                         </td>
                         <td className="px-6 py-4 text-road-grey-700">{itemCount} items</td>
                         <td className="px-6 py-4">

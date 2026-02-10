@@ -1,0 +1,33 @@
+{
+  "pages": {
+    "/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/vendors-_app-pages-browser_node_modules_next_dist_compiled_next_react-refresh-utils_dist_runt-70ff9a.js",
+      "static/chunks/main-app.js",
+      "static/chunks/common-_app-pages-browser_src_stores_authStore_ts-_app-pages-browser_node_modules_next_dist_c-99ceeb.js",
+      "static/chunks/vendors-_app-pages-browser_node_modules_next_dist_api_app-dynamic_js.js",
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
+    ],
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/vendors-_app-pages-browser_node_modules_next_dist_compiled_next_react-refresh-utils_dist_runt-70ff9a.js",
+      "static/chunks/main-app.js",
+      "static/chunks/common-_app-pages-browser_node_modules_lucide-react_dist_esm_createLucideIcon_js-_app-pages-b-59f429.js",
+      "static/chunks/common-_app-pages-browser_src_stores_authStore_ts-_app-pages-browser_node_modules_next_dist_c-99ceeb.js",
+      "static/chunks/common-_app-pages-browser_src_components_common_EmptyState_tsx-_app-pages-browser_src_compone-a8a14c.js",
+      "static/chunks/vendors-_app-pages-browser_node_modules_lucide-react_dist_esm_icons_chevron-right_js-_app-pag-4d4105.js",
+      "static/chunks/app/page.js"
+    ],
+    "/search/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/vendors-_app-pages-browser_node_modules_next_dist_compiled_next_react-refresh-utils_dist_runt-70ff9a.js",
+      "static/chunks/main-app.js",
+      "static/chunks/common-_app-pages-browser_node_modules_lucide-react_dist_esm_createLucideIcon_js-_app-pages-b-59f429.js",
+      "static/chunks/common-_app-pages-browser_src_stores_authStore_ts-_app-pages-browser_node_modules_next_dist_c-99ceeb.js",
+      "static/chunks/common-_app-pages-browser_src_components_common_EmptyState_tsx-_app-pages-browser_src_compone-a8a14c.js",
+      "static/chunks/vendors-_app-pages-browser_node_modules_lucide-react_dist_esm_icons_chevron-down_js-_app-page-4e1d07.js",
+      "static/chunks/app/search/page.js"
+    ]
+  }
+}

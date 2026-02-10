@@ -7,9 +7,9 @@ import { Heart, Star, TrendingUp } from 'lucide-react';
 import { useFavoritesStore } from '@/stores/favoritesStore';
 import { useCartStore } from '@/stores/cartStore';
 import { formatKsh, formatRating, calculateDiscountedPrice } from '@/lib/formatting';
-import Badge from './Badge';
-import Button from './Button';
-import Card from './Card';
+import Badge from '../common/Badge';
+import Button from '../common/Button';
+import Card from '../common/Card';
 import toast from 'react-hot-toast';
 import { Product } from '@/types/models';
 

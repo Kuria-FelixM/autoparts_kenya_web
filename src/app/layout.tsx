@@ -1,6 +1,5 @@
 'use client';
 
-import type { Metadata } from 'next';
 import { ReactNode, useEffect } from 'react';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
@@ -21,54 +20,6 @@ const BottomNav = dynamic(() => import('@/components/layout/BottomNav'), {
 const SideDrawer = dynamic(() => import('@/components/layout/SideDrawer'), {
   ssr: true,
 });
-
-export const metadata: Metadata = {
-  title: 'AutoParts Kenya - Genuine Car Parts & Accessories',
-  description:
-    'Buy genuine automotive spare parts in Kenya. Fast delivery in Nairobi. Secure M-Pesa payment. Expert mechanics trusted.',
-  keywords: [
-    'car parts Kenya',
-    'auto parts',
-    'spares',
-    'Nairobi delivery',
-    'M-Pesa',
-    'vehicle parts',
-  ],
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-    viewportFit: 'cover',
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'black-translucent',
-    title: 'AutoParts Kenya',
-  },
-  formatDetection: {
-    telephone: true,
-    email: true,
-    address: true,
-  },
-  manifest: '/manifest.json',
-  icons: {
-    icon: '/favicon.ico',
-    apple: [
-      {
-        url: '/logo-192.png',
-        sizes: '192x192',
-        type: 'image/png',
-      },
-      {
-        url: '/logo-512.png',
-        sizes: '512x512',
-        type: 'image/png',
-      },
-    ],
-  },
-  themeColor: '#1976D2',
-};
 
 interface RootLayoutProps {
   children: ReactNode;
