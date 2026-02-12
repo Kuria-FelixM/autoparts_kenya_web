@@ -21,6 +21,10 @@ const SideDrawer = dynamic(() => import('@/components/layout/SideDrawer'), {
   ssr: true,
 });
 
+const Footer = dynamic(() => import('@/components/layout/Footer'), {
+  ssr: true,
+});
+
 interface RootLayoutProps {
   children: ReactNode;
 }
@@ -137,20 +141,23 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
             Skip to main content
           </a>
 
-          {/* TopAppBar */}
+          {/* TopAppBar - larger on desktop */}
           <TopAppBar />
 
-          {/* SideDrawer (owner only) */}
+          {/* SideDrawer (owner only, persistent on desktop) */}
           <SideDrawer />
 
-          {/* Main Content Area - with left margin for desktop sidebar */}
+          {/* Main Content Area */}
           <main
             id="main-content"
-            className="flex-1 w-full md:ml-20"
+            className="flex-1 w-full transition-all duration-300 md:pr-0"
             role="main"
           >
             {children}
           </main>
+
+          {/* Footer */}
+          <Footer />
 
           {/* BottomNav (mobile only) */}
           <BottomNav />

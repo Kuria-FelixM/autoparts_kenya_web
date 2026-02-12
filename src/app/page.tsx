@@ -12,7 +12,7 @@ import Badge from '@/components/common/Badge';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import ProductCard from '@/components/product/ProductCard';
 import EmptyState from '@/components/common/EmptyState';
-import { ChevronRight, MapPin, Zap, Shield, Truck } from 'lucide-react';
+import { ChevronRight, MapPin, Zap, Shield, Truck, Wrench, Heart, Star } from 'lucide-react';
 
 /**
  * Home Page (/page.tsx)
@@ -53,41 +53,62 @@ const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-road-grey-100 pb-20 md:pb-0">
       {/* Hero Section */}
-      <section className="relative h-96 md:h-[500px] bg-gradient-header overflow-hidden">
+      <section className="relative w-full h-96 md:h-[500px] bg-gradient-header overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23000000" fill-opacity="0.1"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
         }} />
 
-        <div className="relative h-full container-app flex flex-col justify-center items-start gap-6 z-10">
+        <div className="relative h-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 flex flex-col justify-center items-center sm:items-start gap-6 z-10 lg:flex-row lg:justify-center lg:items-center lg:gap-16 xl:gap-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-lg"
+            className="max-w-lg w-full"
           >
-            <h1 className="text-h1 md:text-4xl font-montserrat font-bold text-white mb-4 leading-tight">
-              Genuine Car Parts for Nairobi
+            <h1 className="text-h1 md:text-4xl font-montserrat font-bold text-white mb-4 leading-tight text-center sm:text-left">
+              Genuine Car Parts In Kenya
             </h1>
-            <p className="text-body-lg md:text-h4 text-white/90 mb-6">
+            <p className="text-body-lg md:text-h4 text-white/90 mb-6 text-center sm:text-left">
               Quality spares. Fast delivery. Trusted mechanics.
             </p>
 
-            <div className="flex flex-col md:flex-row gap-3">
-              <Link href="/search">
-                <Button variant="primary" size="lg" className="w-full md:w-auto">
+            <div className="flex flex-col md:flex-row gap-3 w-full sm:w-auto">
+              <Link href="/search" className="w-full md:w-auto">
+                <Button variant="primary" size="lg" className="w-full h-auto py-3 px-6 text-base md:text-lg font-semibold flex items-center justify-center gap-2 hover:shadow-lg hover:scale-105 transition-all duration-300">
+                  <Zap className="w-5 h-5" />
                   Browse Parts
                   <ChevronRight className="w-5 h-5" />
                 </Button>
               </Link>
-              <Button variant="secondary" size="lg" className="w-full md:w-auto text-white border-white hover:bg-white/20">
+              <button className="w-full md:w-auto px-6 py-3 bg-white/20 backdrop-blur-sm text-white font-montserrat font-semibold rounded-lg hover:bg-white hover:text-mechanic-blue transition-all duration-300 flex items-center justify-center gap-2 group border-2 border-white hover:shadow-lg hover:scale-105">
+                <Shield className="w-5 h-5" />
                 Learn More
-              </Button>
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Hero Icon - Large devices only */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="hidden lg:flex items-center justify-center flex-shrink-0"
+          >
+            <div className="relative">
+              {/* Background circles */}
+              <div className="absolute inset-0 bg-white/20 rounded-full w-48 h-48 blur-3xl animate-pulse"></div>
+              
+              {/* Main icon container */}
+              <div className="relative bg-white/10 backdrop-blur-md rounded-full w-48 h-48 flex items-center justify-center border border-white/30 hover:border-white/50 transition-all duration-300">
+                <Wrench className="w-24 h-24 text-white animate-bounce" />
+              </div>
             </div>
           </motion.div>
         </div>
 
         {/* Trust Badges */}
-        <div className="absolute bottom-4 left-0 right-0 container-app flex gap-3 flex-wrap justify-center md:justify-start z-10">
+        <div className="absolute bottom-4 left-4 sm:left-6 md:left-8 lg:left-12 xl:left-16 flex gap-3 flex-wrap z-10">
           <Badge
             type="genuine"
             label="100% Genuine"
@@ -110,7 +131,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Vehicle Selector */}
-      <section className="py-8 md:py-12 container-app">
+      <section className="py-8 md:py-12 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         <h2 className="text-h2 font-montserrat font-bold mb-6 text-road-grey-900">
           {selectedVehicle
             ? `Parts for ${selectedVehicle.make_name} ${selectedVehicle.model_name} (${selectedVehicle.year})`
@@ -140,7 +161,7 @@ const HomePage: React.FC = () => {
 
       {/* Features / Why Choose Us */}
       <section className="py-12 md:py-16 bg-white">
-        <div className="container-app grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 grid grid-cols-1 md:grid-cols-3 gap-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -195,8 +216,8 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Featured Products */}
-      <section className="py-12 md:py-16 container-app">
-        <div className="flex items-center justify-between mb-8">
+      <section className="py-12 md:py-16 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
           <h2 className="text-h2 font-montserrat font-bold text-road-grey-900">
             ⭐ Featured Products
           </h2>
@@ -228,7 +249,7 @@ const HomePage: React.FC = () => {
             description="Check back soon for handpicked selections"
           />
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
             {featuredProducts.map((product, idx) => (
               <motion.div
                 key={product.id}
@@ -258,7 +279,7 @@ const HomePage: React.FC = () => {
 
       {/* Categories Grid */}
       <section className="py-12 md:py-16 bg-white">
-        <div className="container-app">
+        <div className="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
           <h2 className="text-h2 font-montserrat font-bold mb-8 text-road-grey-900">
             Shop by Category
           </h2>
@@ -270,7 +291,7 @@ const HomePage: React.FC = () => {
               description="Check back soon"
             />
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {categories.slice(0, 8).map((category) => (
                 <Link
                   key={category.id}
@@ -304,7 +325,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 md:py-16 container-app">
+      <section className="py-12 md:py-16 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         <div className="bg-gradient-to-r from-mechanic-blue to-reliable-red rounded-2xl p-8 md:p-16 text-white text-center">
           <h2 className="text-h2 md:text-4xl font-montserrat font-bold mb-4">
             Can't find what you're looking for?

@@ -183,7 +183,7 @@ export const apiMethods = {
 
 // Error handling utility
 export const handleApiError = (error: any): string => {
-  const lang = 'en'; // Could be dynamic based on locale
+  const lang = 'EN'; // Using English by default
 
   if (!error.response) {
     return MESSAGES[lang as 'EN' | 'SW'].NETWORK_ERROR;

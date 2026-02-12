@@ -67,9 +67,9 @@ const SideDrawer: React.FC = () => {
     <>
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden md:flex flex-col fixed left-0 top-20 h-[calc(100vh-80px)] bg-white border-r border-road-grey-300 shadow-lg transition-all duration-300 ${
+        className={`hidden md:flex flex-col fixed left-0 top-0 h-screen bg-white border-r border-road-grey-200 shadow-xl transition-all duration-300 ${
           expanded ? 'w-64' : 'w-20'
-        } z-30`}
+        } z-40`}
         role="navigation"
         aria-label="Admin navigation"
       >

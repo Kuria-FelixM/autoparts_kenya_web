@@ -317,7 +317,7 @@ export default function SearchPage() {
           <div className="bg-white rounded-lg border border-road-grey-200 p-4 flex items-center justify-between">
             <div>
               <p className="text-sm text-road-grey-600">
-                {products.length > 0
+                {products && products.length > 0
                   ? `Showing ${products.length} results`
                   : 'No products found'}
               </p>
@@ -343,7 +343,7 @@ export default function SearchPage() {
           {/* Products Grid */}
           {isLoading ? (
             <LoadingSpinner fullScreen message="Loading products..." />
-          ) : products.length === 0 ? (
+          ) : !products || products.length === 0 ? (
             <EmptyState
               type="no-results"
               title="No parts found"

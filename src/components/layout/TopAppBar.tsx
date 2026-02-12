@@ -46,10 +46,10 @@ const TopAppBar: React.FC = () => {
     <>
       {/* Main Header */}
       <header
-        className="sticky top-0 z-40 w-full bg-white shadow-sm border-b border-road-grey-300 md:border-0 md:shadow-md"
+        className="sticky top-0 z-50 w-full bg-white shadow-md border-b border-road-grey-200 md:shadow-lg md:h-24"
         role="banner"
       >
-        <div className="container-app h-16 md:h-20 flex items-center justify-between gap-4">
+        <div className="h-16 md:h-24 flex items-center justify-between gap-4 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 w-full">
           {/* Logo / Brand */}
           <Link
             href="/"
@@ -70,14 +70,14 @@ const TopAppBar: React.FC = () => {
           </Link>
 
           {/* Search Bar - Desktop only */}
-          <div className="hidden md:flex flex-1 max-w-xs mx-4">
+          <div className="hidden md:flex flex-1 max-w-md mx-4">
             <Link
               href="/search"
-              className="w-full flex items-center gap-2 px-3 py-2 bg-road-grey-100 rounded-lg hover:bg-road-grey-200 transition-colors group"
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border-2 border-road-grey-300 rounded-xl hover:border-mechanic-blue hover:shadow-md transition-all duration-300 group"
             >
               <Search className="w-5 h-5 text-road-grey-500 group-hover:text-mechanic-blue transition-colors" />
-              <span className="text-body-sm text-road-grey-500 group-hover:text-road-grey-700">
-                Search parts...
+              <span className="text-body-md text-road-grey-500 group-hover:text-road-grey-700 font-medium">
+                Search parts by name...
               </span>
             </Link>
           </div>

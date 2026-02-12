@@ -118,8 +118,15 @@ const config: Config = {
         'tyre-pattern': "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\"><path d=\"M8 16c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4z\" opacity=\"0.05\" fill=\"%23000\"/></svg>')",
       },
       maxWidth: {
-        'app': '428px',  // Mobile viewport
-        'desktop': '1200px',
+        'app': '100%',  // Full width responsive
+      },
+      screens: {
+        'xs': '320px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
       },
       minHeight: {
         'touch': '48px',  // Minimum touch target
