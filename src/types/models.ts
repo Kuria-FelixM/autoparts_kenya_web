@@ -146,6 +146,7 @@ export interface UserProfile {
   is_owner: boolean;
   business_registration?: string;
   tax_id?: string;
+  saved_vehicles?: SavedVehicle[];
   email_notifications: boolean;
   sms_notifications: boolean;
   created_at: string;

@@ -100,16 +100,15 @@ export const useCartStore = create<CartStore>()(
       updateQuantity: (product_id: number, quantity: number) => {
         set((state) => {
           if (quantity <= 0) {
-            return get().removeItem(product_id);
+            get().removeItem(product_id);
+            return state;
           }
-
-          const newItems = state.items.map((item) =>
+          const updatedItems = state.items.map((item) =>
             item.product_id === product_id ? { ...item, quantity } : item
           );
-
-          const { subtotal, total } = calculateTotals(newItems, state.delivery);
+          const { subtotal, total } = calculateTotals(updatedItems, state.delivery);
           return {
-            items: newItems,
+            items: updatedItems,
             subtotal,
             total,
           };
@@ -122,8 +121,6 @@ export const useCartStore = create<CartStore>()(
           delivery: null,
           guest_email: null,
           guest_phone: null,
-          subtotal: 0,
-          total: 0,
         });
       },
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import { Shield, CheckCircle, AlertCircle, Star, TrendingUp, Zap } from 'lucide-react';
+import { Shield, CheckCircle, Star, TrendingUp, Zap } from 'lucide-react';
 
 /**
  * Badge Component

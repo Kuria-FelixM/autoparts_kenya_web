@@ -112,12 +112,12 @@ export default function CheckoutPage() {
       const orderResponse = await apiMethods.checkout(checkoutData);
       
       // Initiate STK Push
-      const stkResponse = await apiMethods.initiateSTKPush({
+      await apiMethods.initiateSTKPush({
+        order_id: orderResponse.data.id,
         phone_number: normalizePhoneNumber(mpesaPhone),
-        amount: Math.round(total),
       });
 
-      setOrderNumber(orderResponse.order_number || 'ORD-' + Date.now());
+      setOrderNumber(orderResponse.data.order_number || 'ORD-' + Date.now());
       setPaymentStatus('success');
       setStep('success');
       clearCart();

@@ -37,7 +37,7 @@ export default function OrderDetailPage() {
     try {
       setIsLoading(true);
       const data = await apiMethods.getOrderDetail(orderId);
-      setOrder(data);
+      setOrder(data.data);
     } catch (error) {
       handleApiError(error as any);
       toast.error('Failed to load order');
@@ -174,11 +174,11 @@ export default function OrderDetailPage() {
                 </div>
                 <div className="flex justify-between text-road-grey-600">
                   <span>Delivery Fee</span>
-                  <span>{formatKsh(order.delivery_fee || 0)}</span>
+                  <span>{formatKsh(order.delivery_cost || 0)}</span>
                 </div>
                 <div className="border-t border-road-grey-200 pt-3 flex justify-between text-lg font-bold">
                   <span>Total</span>
-                  <span className="text-reliable-red">{formatKsh(order.total)}</span>
+                  <span className="text-reliable-red">{formatKsh(order.total_amount)}</span>
                 </div>
               </div>
             </Card>

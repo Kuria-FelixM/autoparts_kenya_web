@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useVehicleStore } from '@/stores/vehicleStore';
@@ -12,7 +11,7 @@ import Badge from '@/components/common/Badge';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import ProductCard from '@/components/product/ProductCard';
 import EmptyState from '@/components/common/EmptyState';
-import { ChevronRight, MapPin, Zap, Shield, Truck, Wrench, Heart, Star } from 'lucide-react';
+import { ChevronRight, Zap, Shield, Truck, Wrench } from 'lucide-react';
 
 /**
  * Home Page (/page.tsx)

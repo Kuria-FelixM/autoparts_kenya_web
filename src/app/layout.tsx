@@ -4,7 +4,6 @@ import { ReactNode, useEffect } from 'react';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
 import { useAppStore } from '@/stores/appStore';
-import { useAuthStore } from '@/stores/authStore';
 
 // Component imports
 import dynamic from 'next/dynamic';
@@ -31,7 +30,6 @@ interface RootLayoutProps {
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   const { setDarkMode, isDarkMode } = useAppStore();
-  const { user } = useAuthStore();
 
   // Initialize on mount
   useEffect(() => {

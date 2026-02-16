@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
 import {
   Wrench,
@@ -45,7 +44,7 @@ export default function CategoriesPage() {
     try {
       setIsLoading(true);
       const response = await apiMethods.getCategories();
-      setCategories(response);
+      setCategories(response.data);
     } catch (error) {
       handleApiError(error as any);
       toast.error('Failed to load categories');
@@ -105,10 +104,10 @@ export default function CategoriesPage() {
                   <h3 className="font-bold text-sm md:text-base text-road-grey-900 group-hover:text-mechanic-blue transition-colors line-clamp-2">
                     {category.name}
                   </h3>
-                  {category.product_count && (
+                  {category.products_count && (
                     <p className="text-xs text-road-grey-500 mt-1">
-                      {category.product_count}{' '}
-                      {category.product_count === 1 ? 'product' : 'products'}
+                      {category.products_count}{' '}
+                      {category.products_count === 1 ? 'product' : 'products'}
                     </p>
                   )}
                 </div>

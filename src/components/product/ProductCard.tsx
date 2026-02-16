@@ -1,9 +1,9 @@
 'use client';
 
-import React, { ReactNode } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, Star, TrendingUp } from 'lucide-react';
+import { Heart, Star } from 'lucide-react';
 import { useFavoritesStore } from '@/stores/favoritesStore';
 import { useCartStore } from '@/stores/cartStore';
 import { formatKsh, formatRating, calculateDiscountedPrice } from '@/lib/formatting';
@@ -11,7 +11,7 @@ import Badge from '../common/Badge';
 import Button from '../common/Button';
 import Card from '../common/Card';
 import toast from 'react-hot-toast';
-import { Product } from '@/types/models';
+// types are not directly used here
 
 /**
  * ProductCard Component
@@ -57,7 +57,7 @@ const ProductCard: React.FC<ProductCardProps> = (props) => {
     sku = props.sku,
     price = props.price || props.unit_price,
     discountPercentage = props.discountPercentage || props.discount_percentage || 0,
-    cost_price = props.cost_price,
+    // cost_price intentionally unused here
     stock = props.stock || props.available_stock || 0,
     reserved_stock = props.reserved_stock || 0,
     primaryImage = props.primaryImage || props.primary_image,
@@ -138,7 +138,7 @@ const ProductCard: React.FC<ProductCardProps> = (props) => {
           {primaryImage && (
             <Image
               src={primaryImage}
-              alt={name}
+              alt={name || ''}
               fill
               className="object-cover absolute inset-0 group-hover:scale-110 transition-transform duration-300"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -252,11 +252,11 @@ const ProductCard: React.FC<ProductCardProps> = (props) => {
           {/* Price */}
           <div className="flex items-baseline gap-2">
             <span className="text-h4 font-montserrat font-bold text-reliable-red">
-              {formatKsh(discountedPrice > 0 ? discountedPrice : price)}
+              {formatKsh((discountedPrice > 0 ? discountedPrice : price) ?? 0)}
             </span>
             {discountPercentage > 0 && (
               <span className="text-body-sm text-road-grey-500 line-through">
-                {formatKsh(price)}
+                {formatKsh(price ?? 0)}
               </span>
             )}
           </div>

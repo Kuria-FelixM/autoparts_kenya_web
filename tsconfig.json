@@ -58,9 +58,7 @@
       "./types"
     ],
     "types": [
-      "node",
-      "jest",
-      "@testing-library/jest-dom"
+      "node"
     ],
     "incremental": true,
     "plugins": [

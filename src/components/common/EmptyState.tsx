@@ -1,7 +1,7 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import { AlertCircle, CheckCircle, InfoIcon as InfoIconLucide } from 'lucide-react';
+import { } from 'lucide-react';
 import Button from './Button';
 
 /**

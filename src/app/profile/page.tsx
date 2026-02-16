@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { LogOut, Settings, Heart, MapPin, Truck, Calendar, Zap } from 'lucide-react';
+import { LogOut, Settings, Heart, Truck, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '@/components/common/Button';
 import Card from '@/components/common/Card';
@@ -11,7 +11,6 @@ import EmptyState from '@/components/common/EmptyState';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import { useAuthStore } from '@/stores/authStore';
 import { useFavoritesStore } from '@/stores/favoritesStore';
-import { useCartStore } from '@/stores/cartStore';
 import { apiMethods, handleApiError } from '@/lib/api';
 import { formatKsh, formatDate } from '@/lib/formatting';
 import { toast } from 'react-hot-toast';
@@ -26,7 +25,7 @@ const TABS = [
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
 
-export default function ProfilePage() {
+function ProfilePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabType>(
@@ -56,7 +55,7 @@ export default function ProfilePage() {
     try {
       setIsLoading(true);
       const response = await apiMethods.getOrders();
-      setOrders(response);
+      setOrders(response.data);
     } catch (error) {
       handleApiError(error as any);
       toast.error('Failed to load orders');
@@ -88,7 +87,7 @@ export default function ProfilePage() {
               <p className="text-blue-100 mt-1">{user?.email}</p>
             </div>
             <div className="text-right text-sm">
-              {user?.is_owner && (
+              {user?.profile?.is_owner && (
                 <span className="inline-block px-3 py-1 bg-trust-gold text-road-grey-900 rounded-full font-bold mb-2 block">
                   Store Owner
                 </span>
@@ -165,7 +164,7 @@ export default function ProfilePage() {
                           </div>
                           <div>
                             <p className="text-xs text-road-grey-600 font-bold mb-1">TOTAL</p>
-                            <p className="font-bold text-reliable-red">{formatKsh(order.total)}</p>
+                            <p className="font-bold text-reliable-red">{formatKsh(order.total_amount)}</p>
                           </div>
                           <div className="flex items-end justify-between md:justify-start gap-2">
                             <div>
@@ -244,17 +243,17 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="grid gap-4">
-                  {user?.saved_vehicles && user.saved_vehicles.length > 0 ? (
-                    user.saved_vehicles.map((vehicle) => (
+                  {user?.profile?.saved_vehicles && user.profile.saved_vehicles.length > 0 ? (
+                    user.profile.saved_vehicles.map((vehicle) => (
                       <Card key={vehicle.id} className="p-6">
                         <div className="flex items-center justify-between">
                           <div className="flex-1">
                             <h3 className="font-bold text-lg text-road-grey-900">
-                              {vehicle.make?.name || 'Unknown'} {vehicle.model?.name || 'Unknown'}{' '}
+                                {vehicle.make_name || (vehicle as any).make?.name || 'Unknown'} {vehicle.model_name || (vehicle as any).model?.name || 'Unknown'}{' '}
                               {vehicle.year}
                             </h3>
                             <p className="text-sm text-road-grey-600 mt-1">
-                              {vehicle.notes || 'No notes'}
+                                {(vehicle as any).notes || vehicle.nickname || 'No notes'}
                             </p>
                           </div>
                           <button className="text-mechanic-blue hover:text-mechanic-blue/80 transition-colors p-2">
@@ -355,5 +354,13 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={<LoadingSpinner fullScreen message="Loading profile..." />}>
+      <ProfilePageContent />
+    </Suspense>
   );
 }

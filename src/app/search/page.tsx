@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import SearchInput from '@/components/search/SearchInput';
 import FilterAccordion from '@/components/search/FilterAccordion';
@@ -42,8 +42,7 @@ interface FilterState {
   sort: string;
 }
 
-export default function SearchPage() {
-  const router = useRouter();
+function SearchPageContent() {
   const searchParams = useSearchParams();
   
   const [filters, setFilters] = useState<FilterState>({
@@ -454,5 +453,13 @@ export default function SearchPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner fullScreen message="Loading search..." />}>
+      <SearchPageContent />
+    </Suspense>
   );
 }

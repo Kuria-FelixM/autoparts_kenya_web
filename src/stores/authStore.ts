@@ -10,6 +10,7 @@ export interface UserProfile {
   is_owner: boolean;
   business_registration?: string;
   tax_id?: string;
+  saved_vehicles?: any[];
   created_at: string;
   updated_at: string;
 }
@@ -61,7 +62,7 @@ export const useAuthStore = create<AuthStore>()(
       isOwner: false,
 
       setUser: (user: User | null) => {
-        set((state) => ({
+        set((_state) => ({
           user,
           isAuthenticated: !!user,
           isOwner: user?.profile?.is_owner || false,
@@ -81,7 +82,7 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       login: (tokens: AuthTokens, user: User) => {
-        set((state) => ({
+        set((_state) => ({
           user,
           tokens,
           isAuthenticated: true,

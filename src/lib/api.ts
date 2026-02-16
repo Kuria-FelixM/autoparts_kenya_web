@@ -2,7 +2,7 @@
  * API Client with JWT interceptor and base configuration
  */
 
-import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosError } from 'axios';
 import { useAuthStore } from '@/stores/authStore';
 import { MESSAGES } from './constants';
 

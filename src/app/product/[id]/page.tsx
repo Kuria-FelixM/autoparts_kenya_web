@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Heart, Star, Zap, Truck } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Heart, Truck, Star } from 'lucide-react';
 import ProductGallery from '@/components/product/ProductGallery';
 import CompatibilityTable from '@/components/product/CompatibilityTable';
 import RelatedProductsCarousel from '@/components/product/RelatedProductsCarousel';
@@ -36,7 +36,8 @@ export default function ProductDetailPage() {
   const fetchProduct = async () => {
     try {
       setIsLoading(true);
-      const data = await apiMethods.getProductDetail(productId);
+      const response = await apiMethods.getProductDetail(Number(productId));
+      const data = response.data;
       setProduct(data);
 
       // Fetch related products (same category)
@@ -46,7 +47,7 @@ export default function ProductDetailPage() {
             category: data.category_id,
             page_size: 8,
           });
-          setRelatedProducts(related.results.filter((p) => p.id !== data.id).slice(0, 5));
+          setRelatedProducts(related.data.results.filter((p: Product) => p.id !== data.id).slice(0, 5));
         } catch {
           // Silently fail for related products
         }
@@ -69,7 +70,7 @@ export default function ProductDetailPage() {
         product_id: product.id,
         product_name: product.name,
         sku: product.sku,
-        unit_price: product.discounted_price > 0 ? product.discounted_price : product.unit_price,
+        unit_price: product.discounted_price > 0 ? product.discounted_price : product.price,
         quantity: 1,
         primary_image: product.primary_image,
       });
@@ -83,7 +84,15 @@ export default function ProductDetailPage() {
 
   const handleToggleFavorite = () => {
     if (!product) return;
-    toggleFavorite(product.id);
+    toggleFavorite({
+      id: product.id,
+      name: product.name,
+      sku: product.sku,
+      price: product.price,
+      discount_percentage: product.discount_percentage,
+      primary_image: product.primary_image,
+      category: product.category.name,
+    });
     toast.success(
       isFavorited(product.id) ? 'Removed from favorites' : 'Added to favorites ❤️'
     );
@@ -109,9 +118,9 @@ export default function ProductDetailPage() {
     );
   }
 
-  const images = product.images?.map((img: ProductImage) => img.image) || [product.primary_image];
+  const images = (product.images?.map((img: ProductImage) => img.image) || [product.primary_image]).filter(Boolean) as string[];
   const discountPercentage = product.discounted_price > 0
-    ? Math.round(((product.unit_price - product.discounted_price) / product.unit_price) * 100)
+    ? Math.round(((product.price - product.discounted_price) / product.price) * 100)
     : 0;
 
   return (
@@ -156,10 +165,10 @@ export default function ProductDetailPage() {
 
               {/* Badges */}
               <div className="flex flex-wrap gap-2">
-                {product.is_featured && <Badge type="featured" />}
-                {product.available_stock > 10 && <Badge type="stock" />}
+                {product.is_featured && <Badge type="featured" label="Featured" />}
+                {product.available_stock > 10 && <Badge type="stock" label="In Stock" />}
                 {product.available_stock > 0 && product.available_stock <= 10 && (
-                  <Badge type="stock" customColor="warning-orange" />
+                  <Badge type="stock" label="Limited Stock" customColor="warning-orange" />
                 )}
                 {product.available_stock === 0 && (
                   <Badge type="custom" label="Out of Stock" customColor="road-grey-500" />
@@ -171,12 +180,12 @@ export default function ProductDetailPage() {
             <div className="space-y-2 pb-4 border-b border-road-grey-200">
               <div className="flex items-baseline gap-3">
                 <span className="text-3xl font-bold text-reliable-red">
-                  {formatKsh(product.discounted_price > 0 ? product.discounted_price : product.unit_price)}
+                  {formatKsh(product.discounted_price > 0 ? product.discounted_price : product.price)}
                 </span>
                 {product.discounted_price > 0 && (
                   <>
                     <span className="text-lg text-road-grey-500 line-through">
-                      {formatKsh(product.unit_price)}
+                      {formatKsh(product.price)}
                     </span>
                     <Badge
                       type="custom"
@@ -206,14 +215,14 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Rating */}
-            {product.average_rating && (
+            {product.rating && (
               <div className="flex items-center gap-2">
                 <div className="flex gap-1">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
                       className={`h-5 w-5 ${
-                        i < Math.floor(product.average_rating!)
+                        i < Math.floor(product.rating!)
                           ? 'fill-trust-gold text-trust-gold'
                           : 'text-road-grey-300'
                       }`}
@@ -221,7 +230,7 @@ export default function ProductDetailPage() {
                   ))}
                 </div>
                 <span className="text-sm text-road-grey-600">
-                  {product.average_rating.toFixed(1)} ({product.review_count || 0} reviews)
+                  {product.rating?.toFixed(1)} ({product.review_count || 0} reviews)
                 </span>
               </div>
             )}
@@ -255,7 +264,14 @@ export default function ProductDetailPage() {
             transition={{ delay: 0.1 }}
             className="bg-white rounded-lg p-4 md:p-6"
           >
-            <CompatibilityTable vehicles={product.compatible_vehicles} />
+            <CompatibilityTable
+              vehicles={product.compatible_vehicles.map((v) => ({
+                make: v.make.name,
+                model: v.name,
+                year_from: v.year_from || 2000,
+                year_to: v.year_to || new Date().getFullYear(),
+              }))}
+            />
           </motion.div>
         )}
 
@@ -288,18 +304,6 @@ export default function ProductDetailPage() {
                 <p className="text-xs font-semibold text-road-grey-600 mb-1">SKU</p>
                 <p className="text-road-grey-900 font-mono">{product.sku}</p>
               </div>
-              {product.weight && (
-                <div>
-                  <p className="text-xs font-semibold text-road-grey-600 mb-1">WEIGHT</p>
-                  <p className="text-road-grey-900">{product.weight} kg</p>
-                </div>
-              )}
-              {product.dimensions && (
-                <div>
-                  <p className="text-xs font-semibold text-road-grey-600 mb-1">DIMENSIONS</p>
-                  <p className="text-road-grey-900">{product.dimensions}</p>
-                </div>
-              )}
             </div>
           </div>
         </motion.div>

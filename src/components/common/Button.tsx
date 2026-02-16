@@ -84,7 +84,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           loading: isLoading || loading,
           className,
         })}
-        disabled={isDisabled}
+        disabled={isDisabled ?? undefined}
         ref={ref}
         {...props}
       >

@@ -122,10 +122,10 @@ function CartItem({
 }
 
 export default function CartPage() {
-  const { items, subtotal, total, delivery, setDelivery, removeItem, updateQuantity, clearCart } =
+  const { items, subtotal, delivery, setDelivery, removeItem, updateQuantity, clearCart } =
     useCartStore();
   const [selectedDelivery, setSelectedDelivery] = useState<DeliveryOption | null>(
-    delivery ? DELIVERY_OPTIONS.find((d) => d.id === delivery) || null : null
+    delivery ? DELIVERY_OPTIONS.find((d) => d.id === delivery.type) || null : null
   );
   const [promoCode, setPromoCode] = useState('');
 
@@ -152,7 +152,17 @@ export default function CartPage() {
 
   const handleDeliveryChange = (option: DeliveryOption) => {
     setSelectedDelivery(option);
-    setDelivery(option.id);
+    const delivery = {
+      type: option.id as 'standard' | 'express' | 'economy',
+      address: '',
+      city: '',
+      postal_code: '',
+      recipient_name: '',
+      recipient_phone: '',
+      estimated_days: { min: 1, max: 7 },
+      delivery_cost: option.value,
+    };
+    setDelivery(delivery);
   };
 
   return (
