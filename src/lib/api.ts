@@ -6,7 +6,7 @@ import axios, { AxiosInstance, AxiosError } from 'axios';
 import { useAuthStore } from '@/stores/authStore';
 import { MESSAGES } from './constants';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://178.128.185.184:8000/api/v1';
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
