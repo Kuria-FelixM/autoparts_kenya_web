@@ -17,6 +17,7 @@ import { ChevronRight, MapPin, Zap, Shield, Truck, Wrench, Heart, Star } from 'l
 /**
  * Home Page (/page.tsx)
  * Hero section, vehicle selector, featured products, categories
+ * FIXED: Proper API response handling for axios
  */
 
 const HomePage: React.FC = () => {
@@ -33,14 +34,28 @@ const HomePage: React.FC = () => {
         setLoading(true);
         setError(null);
 
+        // FIXED: Properly handle axios response structure
         const [featuredRes, categoriesRes] = await Promise.all([
           apiMethods.getFeaturedProducts({ page_size: 8 }),
           apiMethods.getCategories({ page_size: 12 }),
         ]);
 
-        setFeaturedProducts(featuredRes.data.results || []);
-        setCategories(categoriesRes.data.results || []);
+        // Debug logging - remove after testing
+        console.log('Featured Products Response:', featuredRes.data);
+        console.log('Categories Response:', categoriesRes.data);
+
+        // FIXED: Handle both paginated and non-paginated responses
+        const featuredData = featuredRes.data?.results || featuredRes.data || [];
+        const categoriesData = categoriesRes.data?.results || categoriesRes.data || [];
+
+        setFeaturedProducts(Array.isArray(featuredData) ? featuredData : []);
+        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+
+        // Debug logging
+        console.log('Parsed Featured Products:', featuredData);
+        console.log('Parsed Categories:', categoriesData);
       } catch (err: any) {
+        console.error('Error fetching data:', err);
         setError(handleApiError(err));
       } finally {
         setLoading(false);
@@ -257,20 +272,8 @@ const HomePage: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
               >
-                <ProductCard
-                  id={product.id}
-                  name={product.name}
-                  sku={product.sku}
-                  price={product.price}
-                  discountPercentage={product.discount_percentage}
-                  stock={product.stock}
-                  reserved_stock={product.reserved_stock}
-                  primaryImage={product.primary_image}
-                  rating={product.rating}
-                  reviewCount={product.review_count}
-                  isFeatured={product.is_featured}
-                  category={product.category?.name}
-                />
+                {/* FIXED: Spread all product props directly */}
+                <ProductCard {...product} />
               </motion.div>
             ))}
           </div>
@@ -353,6 +356,7 @@ const HomePage: React.FC = () => {
 
 /**
  * Vehicle Selector Sub-component
+ * FIXED: Proper axios response handling
  */
 interface VehicleSelectorComponentProps {
   onSelect: (vehicle: any) => void;
@@ -370,9 +374,12 @@ const VehicleSelectorComponent: React.FC<VehicleSelectorComponentProps> = ({
       try {
         setLoading(true);
         const res = await apiMethods.getVehicleMakes({ page_size: 50 });
-        setMakes(res.data.results || []);
+        
+        // FIXED: Handle axios response structure
+        const makesData = res.data?.results || res.data || [];
+        setMakes(Array.isArray(makesData) ? makesData : []);
       } catch (err) {
-        console.error('Failed to load vehicle makes');
+        console.error('Failed to load vehicle makes:', err);
       } finally {
         setLoading(false);
       }
@@ -419,6 +426,7 @@ const VehicleSelectorComponent: React.FC<VehicleSelectorComponentProps> = ({
 
 /**
  * Model & Year Selector Sub-component
+ * FIXED: Proper axios response handling
  */
 interface ModelYearSelectorProps {
   makeId: number;
@@ -445,9 +453,12 @@ const ModelYearSelector: React.FC<ModelYearSelectorProps> = ({
           make: makeId,
           page_size: 50,
         });
-        setModels(res.data.results || []);
+        
+        // FIXED: Handle axios response structure
+        const modelsData = res.data?.results || res.data || [];
+        setModels(Array.isArray(modelsData) ? modelsData : []);
       } catch (err) {
-        console.error('Failed to load vehicle models');
+        console.error('Failed to load vehicle models:', err);
       } finally {
         setLoading(false);
       }

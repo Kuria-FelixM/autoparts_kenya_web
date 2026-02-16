@@ -22,32 +22,16 @@ const SORT_OPTIONS = [
   { id: 'rating', label: 'Highest Rated' },
 ];
 
-const VEHICLE_MAKES = [
-  { id: 'toyota', label: 'Toyota', count: 145 },
-  { id: 'nissan', label: 'Nissan', count: 98 },
-  { id: 'subaru', label: 'Subaru', count: 67 },
-  { id: 'isuzu', label: 'Isuzu', count: 52 },
-  { id: 'mitsubishi', label: 'Mitsubishi', count: 43 },
-  { id: 'honda', label: 'Honda', count: 38 },
-  { id: 'suzuki', label: 'Suzuki', count: 31 },
-  { id: 'hyundai', label: 'Hyundai', count: 29 },
-];
-
-const CATEGORIES_OPTIONS = [
-  { id: 'brakes', label: 'Brakes', count: 87 },
-  { id: 'tires', label: 'Tires & Wheels', count: 145 },
-  { id: 'engine', label: 'Engine Parts', count: 203 },
-  { id: 'suspension', label: 'Suspension', count: 92 },
-  { id: 'battery', label: 'Batteries', count: 34 },
-  { id: 'electronics', label: 'Electronics', count: 156 },
-  { id: 'oils', label: 'Oils & Fluids', count: 43 },
-  { id: 'accessories', label: 'Accessories', count: 234 },
-];
-
 const STOCK_OPTIONS = [
-  { id: 'in-stock', label: 'In Stock', count: 542 },
-  { id: 'low-stock', label: 'Low Stock', count: 67 },
+  { id: 'in-stock', label: 'In Stock' },
+  { id: 'low-stock', label: 'Low Stock' },
 ];
+
+interface FilterOption {
+  id: string | number;
+  label: string;
+  count?: number;
+}
 
 interface FilterState {
   search: string;
@@ -61,6 +45,7 @@ interface FilterState {
 export default function SearchPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  
   const [filters, setFilters] = useState<FilterState>({
     search: searchParams.get('q') || '',
     makes: [],
@@ -70,6 +55,11 @@ export default function SearchPage() {
     sort: 'newest',
   });
 
+  // Dynamic filter options from API
+  const [vehicleMakes, setVehicleMakes] = useState<FilterOption[]>([]);
+  const [categoriesOptions, setCategoriesOptions] = useState<FilterOption[]>([]);
+  const [isLoadingFilters, setIsLoadingFilters] = useState(true);
+
   const [products, setProducts] = useState<ProductType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -77,6 +67,42 @@ export default function SearchPage() {
   const [page, setPage] = useState(1);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const observerTarget = useRef<HTMLDivElement>(null);
+
+  // Fetch filter options on mount
+  useEffect(() => {
+    fetchFilterOptions();
+  }, []);
+
+  const fetchFilterOptions = async () => {
+    setIsLoadingFilters(true);
+    try {
+      // Fetch vehicle makes - axios returns data in response.data
+      const makesResponse = await apiMethods.getVehicleMakes();
+      const makesData = makesResponse.data.results || makesResponse.data;
+      const makes = (Array.isArray(makesData) ? makesData : []).map((make: any) => ({
+        id: make.id,
+        label: make.name,
+        count: make.models_count || 0,
+      }));
+      setVehicleMakes(makes);
+
+      // Fetch categories - axios returns data in response.data
+      const categoriesResponse = await apiMethods.getCategories();
+      const categoriesData = categoriesResponse.data.results || categoriesResponse.data;
+      const categories = (Array.isArray(categoriesData) ? categoriesData : []).map((category: any) => ({
+        id: category.id,
+        label: category.name,
+        count: category.products_count || 0,
+      }));
+      setCategoriesOptions(categories);
+    } catch (error) {
+      console.error('Failed to fetch filter options:', error);
+      const errorMessage = handleApiError(error);
+      toast.error(errorMessage);
+    } finally {
+      setIsLoadingFilters(false);
+    }
+  };
 
   // Fetch products on filter change
   useEffect(() => {
@@ -94,38 +120,67 @@ export default function SearchPage() {
       }
 
       try {
-        const params = {
+        const params: any = {
           page: pageNum,
           page_size: PAGINATION.DEFAULT_PAGE_SIZE,
-          search: filters.search,
-          categories: filters.categories.length > 0 ? filters.categories.join(',') : undefined,
-          min_price: filters.priceRange[0],
-          max_price: filters.priceRange[1],
-          in_stock: filters.stock.includes('in-stock'),
-          ordering:
-            filters.sort === 'price-asc'
-              ? 'unit_price'
-              : filters.sort === 'price-desc'
-                ? '-unit_price'
-                : filters.sort === 'rating'
-                  ? '-average_rating'
-                  : filters.sort === 'popular'
-                    ? '-sales_count'
-                    : '-created_at',
         };
 
-        const response = await apiMethods.getProducts(params);
-
-        if (reset) {
-          setProducts(response.results);
-        } else {
-          setProducts((prev) => [...prev, ...response.results]);
+        // Add search if present
+        if (filters.search) {
+          params.search = filters.search;
         }
 
-        setHasMore(!!response.next);
+        // Add categories (comma-separated string to match backend)
+        if (filters.categories.length > 0) {
+          params.categories = filters.categories.join(',');
+        }
+
+        // Add vehicle makes if selected
+        if (filters.makes.length > 0) {
+          // You may need to adjust this based on your API structure
+          // For now, sending first make only - adjust if your API supports multiple
+          params.vehicle_make = filters.makes[0];
+        }
+
+        // Add price range (using min_price/max_price to match backend)
+        if (filters.priceRange[0] > 0) {
+          params.min_price = filters.priceRange[0];
+        }
+        if (filters.priceRange[1] < 100000) {
+          params.max_price = filters.priceRange[1];
+        }
+
+        // Add stock filter
+        if (filters.stock.includes('in-stock')) {
+          params.in_stock = true;
+        }
+
+        // Add ordering
+        params.ordering =
+          filters.sort === 'price-asc'
+            ? 'price'
+            : filters.sort === 'price-desc'
+              ? '-price'
+              : filters.sort === 'rating'
+                ? '-rating'
+                : filters.sort === 'popular'
+                  ? '-review_count'
+                  : '-created_at';
+
+        // Axios returns data in response.data
+        const response = await apiMethods.getProducts(params);
+        const responseData = response.data;
+
+        if (reset) {
+          setProducts(responseData.results || []);
+        } else {
+          setProducts((prev) => [...prev, ...(responseData.results || [])]);
+        }
+
+        setHasMore(!!responseData.next);
       } catch (error) {
-        handleApiError(error as any);
-        toast.error('Failed to load products');
+        const errorMessage = handleApiError(error);
+        toast.error(errorMessage);
       } finally {
         setIsLoading(false);
         setIsLoadingMore(false);
@@ -215,46 +270,58 @@ export default function SearchPage() {
           </div>
 
           <div className="p-4 space-y-4 max-h-[70vh] overflow-y-auto">
-            <FilterAccordion
-              title="Vehicle Make"
-              items={VEHICLE_MAKES}
-              selected={filters.makes}
-              onSelect={(ids) => updateFilter('makes', ids)}
-            />
+            {isLoadingFilters ? (
+              <div className="flex justify-center py-8">
+                <LoadingSpinner message="Loading filters..." />
+              </div>
+            ) : (
+              <>
+                {vehicleMakes.length > 0 && (
+                  <FilterAccordion
+                    title="Vehicle Make"
+                    items={vehicleMakes}
+                    selected={filters.makes}
+                    onSelect={(ids) => updateFilter('makes', ids)}
+                  />
+                )}
 
-            <FilterAccordion
-              title="Category"
-              items={CATEGORIES_OPTIONS}
-              selected={filters.categories}
-              onSelect={(ids) => updateFilter('categories', ids)}
-              isMultiSelect
-            />
+                {categoriesOptions.length > 0 && (
+                  <FilterAccordion
+                    title="Category"
+                    items={categoriesOptions}
+                    selected={filters.categories}
+                    onSelect={(ids) => updateFilter('categories', ids)}
+                    isMultiSelect
+                  />
+                )}
 
-            <FilterAccordion
-              title="Price Range"
-              items={[]}
-              selected={filters.priceRange}
-              onSelect={(ids) => updateFilter('priceRange', ids as [number, number])}
-              type="range"
-              minValue={0}
-              maxValue={100000}
-              step={5000}
-            />
+                <FilterAccordion
+                  title="Price Range"
+                  items={[]}
+                  selected={filters.priceRange}
+                  onSelect={(ids) => updateFilter('priceRange', ids as [number, number])}
+                  type="range"
+                  minValue={0}
+                  maxValue={100000}
+                  step={5000}
+                />
 
-            <FilterAccordion
-              title="Stock Status"
-              items={STOCK_OPTIONS}
-              selected={filters.stock}
-              onSelect={(ids) => updateFilter('stock', ids)}
-            />
+                <FilterAccordion
+                  title="Stock Status"
+                  items={STOCK_OPTIONS}
+                  selected={filters.stock}
+                  onSelect={(ids) => updateFilter('stock', ids)}
+                />
 
-            {activeFiltersCount > 0 && (
-              <button
-                onClick={clearAllFilters}
-                className="w-full py-2 px-4 rounded-lg bg-road-grey-100 text-road-grey-900 hover:bg-road-grey-200 text-sm font-medium transition-colors"
-              >
-                Clear All Filters
-              </button>
+                {activeFiltersCount > 0 && (
+                  <button
+                    onClick={clearAllFilters}
+                    className="w-full py-2 px-4 rounded-lg bg-road-grey-100 text-road-grey-900 hover:bg-road-grey-200 text-sm font-medium transition-colors"
+                  >
+                    Clear All Filters
+                  </button>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -263,49 +330,61 @@ export default function SearchPage() {
         {showMobileFilters && (
           <div className="fixed inset-0 top-24 z-40 bg-white md:hidden overflow-y-auto pb-20">
             <div className="p-4 space-y-4">
-              <FilterAccordion
-                title="Vehicle Make"
-                items={VEHICLE_MAKES}
-                selected={filters.makes}
-                onSelect={(ids) => updateFilter('makes', ids)}
-                isOpen
-              />
+              {isLoadingFilters ? (
+                <div className="flex justify-center py-8">
+                  <LoadingSpinner message="Loading filters..." />
+                </div>
+              ) : (
+                <>
+                  {vehicleMakes.length > 0 && (
+                    <FilterAccordion
+                      title="Vehicle Make"
+                      items={vehicleMakes}
+                      selected={filters.makes}
+                      onSelect={(ids) => updateFilter('makes', ids)}
+                      isOpen
+                    />
+                  )}
 
-              <FilterAccordion
-                title="Category"
-                items={CATEGORIES_OPTIONS}
-                selected={filters.categories}
-                onSelect={(ids) => updateFilter('categories', ids)}
-                isOpen
-              />
+                  {categoriesOptions.length > 0 && (
+                    <FilterAccordion
+                      title="Category"
+                      items={categoriesOptions}
+                      selected={filters.categories}
+                      onSelect={(ids) => updateFilter('categories', ids)}
+                      isOpen
+                    />
+                  )}
 
-              <FilterAccordion
-                title="Price Range"
-                items={[]}
-                selected={filters.priceRange}
-                onSelect={(ids) => updateFilter('priceRange', ids as [number, number])}
-                type="range"
-                minValue={0}
-                maxValue={100000}
-                step={5000}
-                isOpen
-              />
+                  <FilterAccordion
+                    title="Price Range"
+                    items={[]}
+                    selected={filters.priceRange}
+                    onSelect={(ids) => updateFilter('priceRange', ids as [number, number])}
+                    type="range"
+                    minValue={0}
+                    maxValue={100000}
+                    step={5000}
+                    isOpen
+                  />
 
-              <FilterAccordion
-                title="Stock Status"
-                items={STOCK_OPTIONS}
-                selected={filters.stock}
-                onSelect={(ids) => updateFilter('stock', ids)}
-                isOpen
-              />
+                  <FilterAccordion
+                    title="Stock Status"
+                    items={STOCK_OPTIONS}
+                    selected={filters.stock}
+                    onSelect={(ids) => updateFilter('stock', ids)}
+                    isOpen
+                  />
 
-              {activeFiltersCount > 0 && (
-                <button
-                  onClick={clearAllFilters}
-                  className="w-full py-2 px-4 rounded-lg bg-road-grey-100 text-road-grey-900 hover:bg-road-grey-200 text-sm font-medium transition-colors"
-                >
-                  Clear All Filters
-                </button>
+                  {activeFiltersCount > 0 && (
+                    <button
+                      onClick={clearAllFilters}
+                      className="w-full py-2 px-4 rounded-lg bg-road-grey-100 text-road-grey-900 hover:bg-road-grey-200 text-sm font-medium transition-colors"
+                    >
+                      Clear All Filters
+                    </button>
+                  )}
+                </>
               )}
             </div>
           </div>
