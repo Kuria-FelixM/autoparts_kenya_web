@@ -9,7 +9,6 @@ import { formatKsh } from '@/lib/formatting';
 import Button from '@/components/common/Button';
 import EmptyState from '@/components/common/EmptyState';
 import Card from '@/components/common/Card';
-import { CONSTANTS } from '@/lib/constants';
 import { toast } from 'react-hot-toast';
 
 interface DeliveryOption {
