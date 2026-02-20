@@ -32,7 +32,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'autoparts-kenya.flycast.io', // Placeholder for production API
+        hostname: 'api.autoparts.ke', // Placeholder for production API
         pathname: '/media/**',
       },
     ],
