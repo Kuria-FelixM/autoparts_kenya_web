@@ -44,6 +44,7 @@ export default function ProductGallery({
           )}
           onClick={() => setIsZoomed(!isZoomed)}
           priority
+          unoptimized
         />
 
         {/* Navigation Arrows */}
@@ -94,6 +95,7 @@ export default function ProductGallery({
                 alt={`${alt} thumbnail ${index + 1}`}
                 fill
                 className="object-cover"
+                unoptimized
               />
             </button>
           ))}
